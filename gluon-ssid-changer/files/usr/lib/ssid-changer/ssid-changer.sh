@@ -22,14 +22,14 @@ then
 	echo "Gateway TQ is $GATEWAY_TQ node is online"
 	for HOSTAPD in $(ls /var/run/hostapd-phy*); do #Check status for all physical devices
 		CURRENT_SSID=`grep "^ssid=$ONLINE_SSID" $HOSTAPD | cut -d"=" -f2`
-		if [ $CURRENT_SSID == $ONLINE_SSID ]
+		if [ $CURRENT_SSID = $ONLINE_SSID ]
 		then
 			echo "SSID $CURRENT_SSID is correct, noting to do"
 			HUP_NEEDED=0
 			break
 		fi
 		CURRENT_SSID=`grep "^ssid=$OFFLINE_SSID" $HOSTAPD | cut -d"=" -f2`
-		if [ $CURRENT_SSID == $OFFLINE_SSID ]
+		if [ $CURRENT_SSID = $OFFLINE_SSID ]
 		then
 			logger -s -t "gluon-offline-ssid" -p 5 "TQ is $GATEWAY_TQ, SSID is $CURRENT_SSID, change to $ONLINE_SSID" #Write Info to Syslog
 			sed -i s/^ssid=$CURRENT_SSID/ssid=$ONLINE_SSID/ $HOSTAPD
@@ -45,14 +45,14 @@ then
 	echo "Gateway TQ is $GATEWAY_TQ node is considered offline"
 	for HOSTAPD in $(ls /var/run/hostapd-phy*); do #Check status for all physical devices
 		CURRENT_SSID=`grep "^ssid=$OFFLINE_SSID" $HOSTAPD | cut -d"=" -f2`
-		if [ $CURRENT_SSID == $OFFLINE_SSID ]
+		if [ $CURRENT_SSID = $OFFLINE_SSID ]
 		then
 			echo "SSID $CURRENT_SSID is correct, noting to do"
 			HUP_NEEDED=0
 			break
 		fi
 		CURRENT_SSID=`grep "^ssid=$ONLINE_SSID" $HOSTAPD | cut -d"=" -f2`
-		if [ $CURRENT_SSID == $ONLINE_SSID ]
+		if [ $CURRENT_SSID = $ONLINE_SSID ]
 		then
 			logger -s -t "gluon-offline-ssid" -p 5 "TQ is $GATEWAY_TQ, SSID is $CURRENT_SSID, change to $OFFLINE_SSID" #Write Info to Syslog
 			sed -i s/^ssid=$ONLINE_SSID/ssid=$OFFLINE_SSID/ $HOSTAPD
@@ -69,7 +69,7 @@ then
 	HUP_NEEDED=0
 fi
 
-if [ $HUP_NEEDED == 1 ]; then
+if [ $HUP_NEEDED = 1 ]; then
 	killall -HUP hostapd # Send HUP to all hostapd um die neue SSID zu laden
 	HUP_NEEDED=0
 	echo "HUP!"
