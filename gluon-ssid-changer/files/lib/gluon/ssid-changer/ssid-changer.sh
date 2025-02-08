@@ -168,7 +168,10 @@ fi
 
 if [ $HUP_NEEDED = 1 ]; then
 	# send HUP to all hostapd to load the new SSID
-	killall -HUP hostapd
+	for i in /var/run/hostapd-phy*.conf; do 
+		phy="$(basename "${i}"|sed 's/hostapd-phy\([0-9]*\).conf$/phy\1/')"
+		ubus call hostapd reload '{"phy": "'"${phy}"'"}'
+	done
 	HUP_NEEDED=0
 	echo "HUP!"
 fi
